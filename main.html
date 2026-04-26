@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DevHub — Your Code, Your Universe</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root {
+      --bg-deep:    #0a0c10;
+      --bg-card:    #111318;
+      --bg-hover:   #1a1d24;
+      --border:     #2a2d36;
+      --accent:     #00e5ff;
+      --accent2:    #7c3aed;
+      --accent3:    #f59e0b;
+      --text-main:  #e8ecf0;
+      --text-muted: #6b7280;
+      --text-dim:   #3d4250;
+      --green:      #22c55e;
+      --red:        #ef4444;
+      --radius:     10px;
+      --font-ui:    'Syne', sans-serif;
+      --font-code:  'JetBrains Mono', monospace;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg-deep); color: var(--text-main); font-family: var(--font-ui); min-height: 100vh; overflow-x: hidden; }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 39px, var(--text-dim) 39px, var(--text-dim) 40px),
+        repeating-linear-gradient(90deg, transparent, transparent 39px, var(--text-dim) 39px, var(--text-dim) 40px);
+      opacity: 0.04; pointer-events: none; z-index: 0;
+    }
+
+    /* ── NAVBAR ── */
+    .dh-nav { background: rgba(10,12,16,.92); border-bottom: 1px solid var(--border); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); position: sticky; top: 0; z-index: 100; padding: 0 1.5rem; height: 58px; display: flex; align-items: center; gap: 1.5rem; }
+    .dh-logo { font-family: var(--font-code); font-weight: 700; font-size: 1.1rem; color: var(--accent); letter-spacing: -.5px; display: flex; align-items: center; gap: 8px; text-decoration: none; white-space: nowrap; }
+    .dh-logo .bracket { color: var(--accent2); }
+    .nav-search { flex: 1; max-width: 340px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; padding: 0 12px; gap: 8px; transition: border-color .2s; }
+    .nav-search:focus-within { border-color: var(--accent); }
+    .nav-search input { background: transparent; border: none; outline: none; color: var(--text-main); font-family: var(--font-code); font-size: .8rem; width: 100%; padding: 7px 0; }
+    .nav-search input::placeholder { color: var(--text-muted); }
+    .nav-search i { color: var(--text-muted); font-size: .85rem; }
+    .nav-links { display: flex; align-items: center; gap: .2rem; margin-left: auto; }
+    .nav-links a { color: var(--text-muted); text-decoration: none; font-size: .82rem; font-weight: 600; padding: 5px 10px; border-radius: 6px; transition: color .2s, background .2s; }
+    .nav-links a:hover { color: var(--text-main); background: var(--bg-hover); }
+    .btn-new { background: var(--accent); color: #000; border: none; border-radius: 7px; font-family: var(--font-ui); font-weight: 700; font-size: .78rem; padding: 6px 14px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity .2s, transform .15s; white-space: nowrap; }
+    .btn-new:hover { opacity: .88; transform: translateY(-1px); }
+    .avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--accent2), var(--accent)); display: flex; align-items: center; justify-content: center; font-size: .75rem; font-weight: 700; color: #fff; cursor: pointer; flex-shrink: 0; }
+
+    /* ── HERO ── */
+    .hero-banner { position: relative; z-index: 1; background: linear-gradient(135deg, #0d0f1a 0%, #0a0c10 60%); border-bottom: 1px solid var(--border); padding: 56px 24px 48px; overflow: hidden; text-align: center; }
+    .hero-banner::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(124,58,237,.18) 0%, transparent 70%), radial-gradient(ellipse 40% 40% at 80% 80%, rgba(0,229,255,.10) 0%, transparent 60%); pointer-events: none; }
+    .hero-eyebrow { font-family: var(--font-code); font-size: .72rem; color: var(--accent2); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 14px; position: relative; z-index: 1; }
+    .hero-title { font-size: clamp(2rem, 5vw, 3.4rem); font-weight: 800; line-height: 1.1; margin-bottom: 16px; position: relative; z-index: 1; }
+    .hero-title span { color: var(--accent); }
+    .hero-sub { font-size: .95rem; color: var(--text-muted); max-width: 520px; margin: 0 auto 28px; line-height: 1.7; position: relative; z-index: 1; }
+    .hero-actions { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-bottom: 40px; position: relative; z-index: 1; }
+    .btn-hero-primary { background: var(--accent); color: #000; border: none; border-radius: 8px; font-family: var(--font-ui); font-weight: 700; font-size: .9rem; padding: 11px 26px; cursor: pointer; transition: opacity .2s, transform .15s; }
+    .btn-hero-primary:hover { opacity: .88; transform: translateY(-2px); }
+    .btn-hero-secondary { background: transparent; color: var(--text-main); border: 1px solid var(--border); border-radius: 8px; font-family: var(--font-ui); font-weight: 700; font-size: .9rem; padding: 11px 26px; cursor: pointer; transition: border-color .2s, background .2s; }
+    .btn-hero-secondary:hover { border-color: var(--accent2); background: rgba(124,58,237,.08); }
+    .hero-stats { display: flex; justify-content: center; gap: 36px; flex-wrap: wrap; position: relative; z-index: 1; }
+    .hero-stat { text-align: center; }
+    .hero-stat-num { font-family: var(--font-code); font-size: 1.5rem; font-weight: 700; color: var(--text-main); }
+    .hero-stat-label { font-size: .72rem; color: var(--text-muted); margin-top: 2px; }
+    .hero-illustration { position: relative; z-index: 1; max-width: 860px; margin: 36px auto 0; }
+    .hero-illustration svg { width: 100%; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 32px 64px rgba(0,0,0,.6); }
+
+    /* ── HOW IT WORKS ── */
+    .how-section { position: relative; z-index: 1; padding: 52px 24px; background: var(--bg-card); border-bottom: 1px solid var(--border); }
+    .section-eyebrow { font-family: var(--font-code); font-size: .7rem; text-transform: uppercase; letter-spacing: 2px; color: var(--accent2); text-align: center; margin-bottom: 8px; }
+    .section-title { font-size: 1.6rem; font-weight: 800; text-align: center; margin-bottom: 6px; }
+    .section-sub { text-align: center; color: var(--text-muted); font-size: .88rem; max-width: 480px; margin: 0 auto 40px; line-height: 1.6; }
+    .how-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0; max-width: 960px; margin: 0 auto; position: relative; }
+    .how-steps::before { content: ''; position: absolute; top: 36px; left: 15%; right: 15%; height: 1px; background: linear-gradient(90deg, transparent, var(--accent2), var(--accent), transparent); opacity: .4; }
+    .how-step { text-align: center; padding: 24px 20px; position: relative; }
+    .how-icon-wrap { width: 72px; height: 72px; border-radius: 16px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; position: relative; z-index: 1; }
+    .hi-upload { background: rgba(124,58,237,.18); color: var(--accent2); border: 1px solid rgba(124,58,237,.3); }
+    .hi-branch { background: rgba(0,229,255,.1); color: var(--accent); border: 1px solid rgba(0,229,255,.25); }
+    .hi-collab { background: rgba(34,197,94,.1); color: var(--green); border: 1px solid rgba(34,197,94,.25); }
+    .hi-deploy { background: rgba(245,158,11,.12); color: var(--accent3); border: 1px solid rgba(245,158,11,.25); }
+    .how-step h4 { font-size: .92rem; font-weight: 800; margin-bottom: 6px; }
+    .how-step p { font-size: .78rem; color: var(--text-muted); line-height: 1.6; }
+
+    /* ── INFO STRIP ── */
+    .info-strip { position: relative; z-index: 1; background: var(--bg-deep); border-bottom: 1px solid var(--border); padding: 40px 24px; }
+    .info-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; }
+    .info-block { padding: 24px 32px; border-right: 1px solid var(--border); }
+    .info-block:last-child { border-right: none; }
+    .info-block svg { margin-bottom: 16px; }
+    .info-block h3 { font-size: 1rem; font-weight: 800; margin-bottom: 8px; }
+    .info-block p { font-size: .8rem; color: var(--text-muted); line-height: 1.65; }
+
+    /* ── MAIN LAYOUT ── */
+    .dh-layout { display: grid; grid-template-columns: 260px 1fr 280px; gap: 0; max-width: 1400px; margin: 0 auto; padding: 28px 24px; position: relative; z-index: 1; }
+    .sidebar-left { padding-right: 24px; }
+    .profile-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; }
+    .profile-avatar { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, var(--accent2) 0%, var(--accent) 100%); display: flex; align-items: center; justify-content: center; font-size: 1.6rem; font-weight: 800; color: #fff; margin-bottom: 12px; border: 2px solid var(--border); }
+    .profile-name { font-size: 1rem; font-weight: 800; }
+    .profile-handle { font-family: var(--font-code); font-size: .78rem; color: var(--text-muted); margin-bottom: 10px; }
+    .profile-bio { font-size: .8rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px; }
+    .profile-stats { display: flex; gap: 12px; font-size: .75rem; color: var(--text-muted); flex-wrap: wrap; }
+    .profile-stats strong { color: var(--text-main); }
+    .sidebar-section { margin-bottom: 20px; }
+    .sidebar-title { font-family: var(--font-code); font-size: .7rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; padding: 0 2px; }
+    .sidebar-nav a { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text-muted); font-size: .83rem; font-weight: 600; padding: 7px 10px; border-radius: 7px; transition: background .2s, color .2s; }
+    .sidebar-nav a:hover, .sidebar-nav a.active { background: var(--bg-hover); color: var(--text-main); }
+    .sidebar-nav a.active i { color: var(--accent); }
+    .badge-count { margin-left: auto; background: var(--bg-deep); border: 1px solid var(--border); color: var(--text-muted); font-family: var(--font-code); font-size: .65rem; padding: 1px 7px; border-radius: 99px; }
+
+    /* ── MAIN ── */
+    .main-content { border-left: 1px solid var(--border); border-right: 1px solid var(--border); padding: 0 28px; }
+    .action-bar { display: flex; align-items: center; gap: 12px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 18px; margin-bottom: 18px; }
+    .action-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--accent2), var(--accent)); display: flex; align-items: center; justify-content: center; font-size: .8rem; font-weight: 700; color: #fff; flex-shrink: 0; }
+    .fake-input { flex: 1; background: var(--bg-deep); border: 1px solid var(--border); border-radius: 7px; padding: 8px 14px; font-size: .83rem; color: var(--text-muted); cursor: pointer; transition: border-color .2s; }
+    .fake-input:hover { border-color: var(--accent); color: var(--text-main); }
+    .action-btns { display: flex; gap: 8px; flex-shrink: 0; }
+    .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-muted); border-radius: 7px; font-family: var(--font-ui); font-weight: 600; font-size: .78rem; padding: 6px 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: border-color .2s, color .2s, background .2s; }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); background: rgba(0,229,255,.05); }
+    .upload-preview { background: var(--bg-card); border: 1px dashed var(--accent2); border-radius: var(--radius); padding: 28px; text-align: center; margin-bottom: 12px; cursor: pointer; transition: border-color .2s, background .2s; }
+    .upload-preview:hover { border-color: var(--accent); background: rgba(0,229,255,.03); }
+    .upload-preview i { font-size: 2rem; color: var(--accent2); margin-bottom: 10px; display: block; }
+    .upload-preview p { font-size: .83rem; color: var(--text-muted); }
+    .upload-preview span { color: var(--accent); font-weight: 700; }
+    .feature-banner { background: linear-gradient(135deg, rgba(124,58,237,.15) 0%, rgba(0,229,255,.07) 100%); border: 1px solid rgba(124,58,237,.3); border-radius: var(--radius); padding: 20px; margin-bottom: 20px; display: flex; gap: 18px; align-items: center; }
+    .feature-banner h4 { font-size: .95rem; font-weight: 800; margin-bottom: 4px; }
+    .feature-banner p { font-size: .8rem; color: var(--text-muted); line-height: 1.5; }
+    .feature-banner a { color: var(--accent); font-size: .78rem; text-decoration: none; font-weight: 700; }
+    .feature-banner a:hover { text-decoration: underline; }
+    .dh-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+    .dh-tab { font-size: .83rem; font-weight: 700; padding: 9px 16px; cursor: pointer; color: var(--text-muted); border-bottom: 2px solid transparent; transition: color .2s, border-color .2s; display: flex; align-items: center; gap: 6px; }
+    .dh-tab.active { color: var(--text-main); border-bottom-color: var(--accent); }
+    .dh-tab:hover { color: var(--text-main); }
+
+    /* ── REPO CARDS ── */
+    .repo-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; margin-bottom: 12px; transition: border-color .2s, transform .15s; cursor: pointer; }
+    .repo-card:hover { border-color: var(--accent2); transform: translateX(2px); }
+    .repo-card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 6px; }
+    .repo-name { font-family: var(--font-code); font-size: .9rem; font-weight: 700; color: var(--accent); display: flex; align-items: center; gap: 8px; }
+    .repo-visibility { font-size: .6rem; font-weight: 700; border-radius: 99px; padding: 2px 8px; border: 1px solid; font-family: var(--font-code); text-transform: uppercase; letter-spacing: .5px; }
+    .repo-visibility.pub { color: var(--green); border-color: var(--green); }
+    .repo-visibility.priv { color: var(--accent3); border-color: var(--accent3); }
+    .repo-thumb { width: 100%; height: 80px; border-radius: 7px; margin-bottom: 12px; overflow: hidden; border: 1px solid var(--border); }
+    .repo-thumb svg { width: 100%; height: 100%; }
+    .repo-desc { font-size: .8rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px; }
+    .repo-meta { display: flex; align-items: center; gap: 16px; font-family: var(--font-code); font-size: .72rem; color: var(--text-muted); }
+    .lang-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
+    .repo-actions { display: flex; gap: 6px; }
+    .repo-btn { background: var(--bg-deep); border: 1px solid var(--border); color: var(--text-muted); border-radius: 6px; font-size: .72rem; font-weight: 700; padding: 4px 10px; cursor: pointer; font-family: var(--font-ui); display: flex; align-items: center; gap: 5px; transition: border-color .2s, color .2s; }
+    .repo-btn:hover { border-color: var(--accent2); color: var(--text-main); }
+
+    /* ── CONTRIB ── */
+    .contrib-section { margin-bottom: 24px; }
+    .contrib-title { font-family: var(--font-code); font-size: .72rem; color: var(--text-muted); margin-bottom: 10px; display: flex; justify-content: space-between; }
+    .contrib-grid { display: grid; grid-template-columns: repeat(52, 1fr); gap: 3px; }
+    .contrib-cell { aspect-ratio: 1; border-radius: 2px; }
+    .c0 { background: var(--bg-hover); } .c1 { background: #0e3d25; } .c2 { background: #16613a; } .c3 { background: #1f8a52; } .c4 { background: var(--green); }
+
+    /* ── ACTIVITY ── */
+    .activity-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-icon { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: .8rem; flex-shrink: 0; }
+    .ai-push { background: rgba(124,58,237,.15); color: var(--accent2); }
+    .ai-star { background: rgba(245,158,11,.12); color: var(--accent3); }
+    .ai-fork { background: rgba(0,229,255,.1); color: var(--accent); }
+    .ai-pr   { background: rgba(34,197,94,.1);  color: var(--green); }
+    .activity-text { font-size: .82rem; color: var(--text-muted); line-height: 1.5; flex: 1; }
+    .activity-text strong { color: var(--text-main); }
+    .repo-link { color: var(--accent); font-family: var(--font-code); font-size: .78rem; text-decoration: none; }
+    .activity-time { font-family: var(--font-code); font-size: .7rem; color: var(--text-dim); white-space: nowrap; }
+
+    /* ── BLOG CARDS ── */
+    .blog-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+    .blog-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; cursor: pointer; transition: border-color .2s, transform .15s; }
+    .blog-card:hover { border-color: var(--accent2); transform: translateY(-2px); }
+    .blog-thumb { width: 100%; height: 110px; overflow: hidden; }
+    .blog-thumb svg { width: 100%; height: 100%; }
+    .blog-body { padding: 13px 15px; }
+    .blog-tag { font-family: var(--font-code); font-size: .62rem; color: var(--accent2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+    .blog-title { font-size: .84rem; font-weight: 800; color: var(--text-main); line-height: 1.35; margin-bottom: 6px; }
+    .blog-meta { font-family: var(--font-code); font-size: .7rem; color: var(--text-dim); display: flex; gap: 10px; }
+
+    /* ── RIGHT SIDEBAR ── */
+    .sidebar-right { padding-left: 24px; }
+    .widget-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-bottom: 16px; }
+    .widget-title { font-family: var(--font-code); font-size: .7rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-dim); margin-bottom: 14px; }
+    .trending-item { display: flex; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); align-items: flex-start; cursor: pointer; }
+    .trending-item:last-child { border-bottom: none; }
+    .trend-rank { font-family: var(--font-code); font-size: .7rem; color: var(--text-dim); width: 16px; flex-shrink: 0; margin-top: 2px; }
+    .trend-info { flex: 1; }
+    .trend-name { font-family: var(--font-code); font-size: .82rem; color: var(--accent); margin-bottom: 2px; }
+    .trend-desc { font-size: .73rem; color: var(--text-muted); }
+    .trend-stars { font-family: var(--font-code); font-size: .7rem; color: var(--accent3); margin-top: 3px; }
+    .topic-chip { display: inline-block; background: rgba(0,229,255,.08); border: 1px solid rgba(0,229,255,.2); color: var(--accent); border-radius: 99px; font-family: var(--font-code); font-size: .7rem; padding: 4px 11px; margin: 3px; cursor: pointer; transition: background .2s; }
+    .topic-chip:hover { background: rgba(0,229,255,.16); }
+    .lang-legend { display: flex; flex-direction: column; gap: 8px; }
+    .lang-row { display: flex; align-items: center; gap: 8px; font-size: .78rem; }
+    .lang-bar-wrap { flex: 1; background: var(--bg-deep); border-radius: 3px; height: 6px; overflow: hidden; }
+    .lang-bar { height: 100%; border-radius: 3px; }
+    .lang-pct { font-family: var(--font-code); font-size: .7rem; color: var(--text-muted); width: 34px; text-align: right; }
+    .learn-item { display: flex; gap: 11px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--border); cursor: pointer; }
+    .learn-item:last-child { border-bottom: none; }
+    .learn-icon { width: 36px; height: 36px; border-radius: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: .9rem; }
+    .li-doc { background: rgba(0,229,255,.1); color: var(--accent); }
+    .li-vid { background: rgba(245,158,11,.12); color: var(--accent3); }
+    .li-tut { background: rgba(124,58,237,.15); color: var(--accent2); }
+    .learn-text h5 { font-size: .82rem; font-weight: 700; margin-bottom: 2px; }
+    .learn-text p { font-size: .72rem; color: var(--text-muted); line-height: 1.4; }
+
+    /* ── FOOTER ── */
+    .dh-footer { border-top: 1px solid var(--border); padding: 24px 24px 28px; position: relative; z-index: 1; background: var(--bg-card); }
+    .footer-grid { max-width: 1400px; margin: 0 auto 28px; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; }
+    .footer-brand .dh-logo { font-size: 1rem; margin-bottom: 12px; display: inline-flex; }
+    .footer-brand p { font-size: .78rem; color: var(--text-muted); line-height: 1.6; max-width: 240px; }
+    .footer-col h5 { font-family: var(--font-code); font-size: .7rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-dim); margin-bottom: 12px; }
+    .footer-col a { display: block; color: var(--text-muted); text-decoration: none; font-size: .8rem; margin-bottom: 7px; transition: color .2s; }
+    .footer-col a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 20px; font-size: .73rem; color: var(--text-dim); font-family: var(--font-code); }
+    .footer-bottom a { color: var(--text-dim); text-decoration: none; margin: 0 8px; }
+    .footer-bottom a:hover { color: var(--accent); }
+    .footer-socials { display: flex; gap: 12px; margin-top: 14px; }
+    .footer-socials a { width: 32px; height: 32px; border-radius: 8px; background: var(--bg-hover); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: .85rem; transition: border-color .2s, color .2s; text-decoration: none; }
+    .footer-socials a:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── UTILS ── */
+    .section-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .section-head h2 { font-size: .92rem; font-weight: 800; }
+    .section-head a { font-size: .78rem; color: var(--accent); text-decoration: none; }
+    .section-head a:hover { text-decoration: underline; }
+
+    @media (max-width: 1100px) {
+      .dh-layout { grid-template-columns: 220px 1fr; }
+      .sidebar-right { display: none; }
+      .main-content { border-right: none; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .info-grid { grid-template-columns: 1fr; }
+      .info-block { border-right: none; border-bottom: 1px solid var(--border); }
+      .info-block:last-child { border-bottom: none; }
+    }
+    @media (max-width: 720px) {
+      .dh-layout { grid-template-columns: 1fr; padding: 16px; }
+      .sidebar-left { padding-right: 0; }
+      .main-content { border: none; padding: 0; }
+      .blog-grid { grid-template-columns: 1fr; }
+      .how-steps::before { display: none; }
+      .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════ NAVBAR ══════ -->
+<nav class="dh-nav">
+  <a href="#" class="dh-logo"><i class="fa-solid fa-code-branch"></i><span><span class="bracket">{</span>DevHub<span class="bracket">}</span></span></a>
+  <div class="nav-search">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" placeholder="Search repos, users, issues…"/>
+    <kbd style="font-size:.65rem;color:var(--text-dim);border:1px solid var(--text-dim);border-radius:4px;padding:1px 5px;font-family:var(--font-code)">/</kbd>
+  </div>
+  <div class="nav-links">
+    <a href="#">Explore</a><a href="#">Issues</a><a href="#">Pulls</a><a href="#">Marketplace</a>
+  </div>
+  <button class="btn-new ms-2"><i class="fa-solid fa-plus"></i> New</button>
+  <div class="avatar ms-2">SH</div>
+</nav>
+
+
+<!-- ══════ HERO ══════ -->
+<section class="hero-banner">
+  <div class="hero-eyebrow">Open Source · Version Control · Collaboration</div>
+  <h1 class="hero-title">Where <span>Developers</span> Build<br/>the Future Together</h1>
+  <p class="hero-sub">DevHub is a platform for hosting, reviewing, and collaborating on code. Upload projects, manage repositories, track issues, and ship faster with your team.</p>
+  <div class="hero-actions">
+    <button class="btn-hero-primary"><i class="fa-solid fa-rocket" style="margin-right:6px"></i>Get Started Free</button>
+    <button class="btn-hero-secondary"><i class="fa-brands fa-github" style="margin-right:6px"></i>Import from GitHub</button>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="hero-stat-num">4.2M+</div><div class="hero-stat-label">Repositories</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">890K+</div><div class="hero-stat-label">Developers</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">12M+</div><div class="hero-stat-label">Commits Today</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">99.9%</div><div class="hero-stat-label">Uptime SLA</div></div>
+  </div>
+  <!-- Hero: fake IDE illustration -->
+  <div class="hero-illustration">
+    <svg viewBox="0 0 860 340" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="hbg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#111318"/><stop offset="100%" stop-color="#0d0f1a"/></linearGradient></defs>
+      <rect width="860" height="340" fill="url(#hbg)" rx="12"/>
+      <!-- title bar -->
+      <rect width="860" height="36" fill="#1a1d24" rx="12"/>
+      <rect width="860" height="16" y="20" fill="#1a1d24"/>
+      <circle cx="20" cy="18" r="6" fill="#ef4444" opacity=".7"/>
+      <circle cx="38" cy="18" r="6" fill="#f59e0b" opacity=".7"/>
+      <circle cx="56" cy="18" r="6" fill="#22c55e" opacity=".7"/>
+      <text x="430" y="23" text-anchor="middle" fill="#3d4250" font-family="JetBrains Mono,monospace" font-size="11">devhub — aryan/devhub-ui — main</text>
+      <!-- file tree -->
+      <rect x="0" y="36" width="200" height="304" fill="#0f1116"/>
+      <rect x="0" y="36" width="200" height="304" fill="none" stroke="#2a2d36" stroke-width="1"/>
+      <text x="14" y="62" fill="#3d4250" font-family="JetBrains Mono,monospace" font-size="10">EXPLORER</text>
+      <text x="14" y="84" fill="#f59e0b" font-family="JetBrains Mono,monospace" font-size="11">▾ 📁 devhub-ui</text>
+      <text x="28" y="102" fill="#6b7280" font-family="JetBrains Mono,monospace" font-size="11">▾ 📁 src</text>
+      <text x="44" y="118" fill="#6b7280" font-family="JetBrains Mono,monospace" font-size="11">📄 index.html</text>
+      <text x="44" y="134" fill="#00e5ff" font-family="JetBrains Mono,monospace" font-size="11">📄 main.css</text>
+      <text x="44" y="150" fill="#f7df1e" font-family="JetBrains Mono,monospace" font-size="11">📄 app.js</text>
+      <text x="44" y="166" fill="#6b7280" font-family="JetBrains Mono,monospace" font-size="11">📁 components</text>
+      <text x="28" y="184" fill="#6b7280" font-family="JetBrains Mono,monospace" font-size="11">▾ 📁 public</text>
+      <text x="44" y="200" fill="#6b7280" font-family="JetBrains Mono,monospace" font-size="11">📄 favicon.ico</text>
+      <text x="14" y="218" fill="#6b7280" font-family="JetBrains Mono,monospace" font-size="11">📄 README.md</text>
+      <text x="14" y="234" fill="#6b7280" font-family="JetBrains Mono,monospace" font-size="11">📄 package.json</text>
+      <text x="14" y="250" fill="#6b7280" font-family="JetBrains Mono,monospace" font-size="11">📄 .gitignore</text>
+      <rect x="10" y="300" width="120" height="22" rx="5" fill="#1a1d24" stroke="#2a2d36" stroke-width="1"/>
+      <text x="20" y="315" fill="#22c55e" font-family="JetBrains Mono,monospace" font-size="10">⎇  main ✓</text>
+      <!-- tab bar -->
+      <rect x="200" y="36" width="450" height="22" fill="#0f1116" stroke="#2a2d36" stroke-width="1"/>
+      <rect x="200" y="36" width="110" height="22" fill="#0d0f18" stroke="#2a2d36" stroke-width="1"/>
+      <text x="212" y="51" fill="#00e5ff" font-family="JetBrains Mono,monospace" font-size="10">● app.js</text>
+      <text x="316" y="51" fill="#3d4250" font-family="JetBrains Mono,monospace" font-size="10">main.css</text>
+      <text x="390" y="51" fill="#3d4250" font-family="JetBrains Mono,monospace" font-size="10">index.html</text>
+      <!-- editor -->
+      <rect x="200" y="58" width="450" height="282" fill="#0d0f18"/>
+      <rect x="200" y="58" width="36" height="282" fill="#0a0c14"/>
+      <text x="208" y="78"  fill="#3d4250" font-family="JetBrains Mono,monospace" font-size="10">1</text>
+      <text x="208" y="94"  fill="#3d4250" font-family="JetBrains Mono,monospace" font-size="10">2</text>
+      <text x="208" y="110" fill="#3d4250" font-family="JetBrains Mono,monospace" font-size="10">3</text>
+      <text x="208" y="126" fill="#3d4250" font-family="JetBrains Mono,monospace" font-size="10">4</text>
+      <text x="208" y="142" fill="#3d4250" font-family="JetBrains Mono,monospace" font-size="10">5</text>
+      <text x="208" y="158" fill="#3d4250" font-family="JetBrains Mono,monospace" font-size="10">6</text>
+      <text x="208" y="174" fill="#3d4250" font-family="JetBrains Mono,monospace" font-size="10">7</text>
+      <text x="208" y="190" fill="#3d4250" font-family="JetBrains Mono,monospace" font-size="10">8</text>
+      <text x="208" y="206" fill="#3d4250" font-family="JetBrains Mono,monospace" font-size="10">9</text>
+      <text x="204" y="222" fill="#3d4250" font-family="JetBrains Mono,monospace" font-size="10">10</text>
+      <rect x="236" y="100" width="414" height="16" fill="rgba(0,229,255,.06)" rx="2"/>
+      <text x="244" y="78"  fill="#7c3aed" font-family="JetBrains Mono,monospace" font-size="11">import</text>
+      <text x="290" y="78"  fill="#e8ecf0" font-family="JetBrains Mono,monospace" font-size="11">{ useState, useEffect }</text>
+      <text x="464" y="78"  fill="#7c3aed" font-family="JetBrains Mono,monospace" font-size="11">from</text>
+      <text x="492" y="78"  fill="#22c55e" font-family="JetBrains Mono,monospace" font-size="11">'react'</text>
+      <text x="244" y="94"  fill="#6b7280" font-family="JetBrains Mono,monospace" font-size="11">// DevHub main dashboard</text>
+      <text x="244" y="110" fill="#7c3aed" font-family="JetBrains Mono,monospace" font-size="11">export default function</text>
+      <text x="408" y="110" fill="#00e5ff" font-family="JetBrains Mono,monospace" font-size="11">Dashboard</text>
+      <text x="480" y="110" fill="#e8ecf0" font-family="JetBrains Mono,monospace" font-size="11">() {}</text>
+      <text x="244" y="126" fill="#e8ecf0" font-family="JetBrains Mono,monospace" font-size="11">  const [repos, setRepos] = useState([]);</text>
+      <text x="244" y="142" fill="#7c3aed" font-family="JetBrains Mono,monospace" font-size="11">  useEffect</text>
+      <text x="318" y="142" fill="#e8ecf0" font-family="JetBrains Mono,monospace" font-size="11">(() =&gt; {"{"}</text>
+      <text x="244" y="158" fill="#e8ecf0" font-family="JetBrains Mono,monospace" font-size="11">    fetchUserRepos().then(data =&gt;</text>
+      <text x="244" y="174" fill="#e8ecf0" font-family="JetBrains Mono,monospace" font-size="11">      setRepos(data));</text>
+      <text x="244" y="190" fill="#e8ecf0" font-family="JetBrains Mono,monospace" font-size="11">  {"}"}, []);</text>
+      <rect x="244" y="198" width="2" height="14" fill="#00e5ff" opacity=".9">
+        <animate attributeName="opacity" values="0.9;0;0.9" dur="1.2s" repeatCount="indefinite"/>
+      </rect>
+      <!-- terminal panel -->
+      <rect x="650" y="36" width="210" height="304" fill="#080a0e"/>
+      <rect x="650" y="36" width="210" height="304" fill="none" stroke="#2a2d36" stroke-width="1"/>
+      <text x="660" y="58"  fill="#3d4250" font-family="JetBrains Mono,monospace" font-size="10">TERMINAL</text>
+      <text x="660" y="78"  fill="#6b7280" font-family="JetBrains Mono,monospace" font-size="10">$ git status</text>
+      <text x="660" y="94"  fill="#22c55e" font-family="JetBrains Mono,monospace" font-size="10">On branch main</text>
+      <text x="660" y="108" fill="#22c55e" font-family="JetBrains Mono,monospace" font-size="10">nothing to commit</text>
+      <text x="660" y="124" fill="#6b7280" font-family="JetBrains Mono,monospace" font-size="10">$ git push origin main</text>
+      <text x="660" y="140" fill="#00e5ff" font-family="JetBrains Mono,monospace" font-size="10">Enumerating objects…</text>
+      <text x="660" y="154" fill="#00e5ff" font-family="JetBrains Mono,monospace" font-size="10">Writing: 100%</text>
+      <text x="660" y="168" fill="#22c55e" font-family="JetBrains Mono,monospace" font-size="10">✓ Push complete</text>
+      <text x="660" y="184" fill="#6b7280" font-family="JetBrains Mono,monospace" font-size="10">$ npm run build</text>
+      <text x="660" y="198" fill="#f59e0b" font-family="JetBrains Mono,monospace" font-size="10">▶ vite build</text>
+      <text x="660" y="212" fill="#22c55e" font-family="JetBrains Mono,monospace" font-size="10">✓ 142 modules</text>
+      <text x="660" y="226" fill="#22c55e" font-family="JetBrains Mono,monospace" font-size="10">dist/ ready in 1.4s</text>
+      <text x="660" y="244" fill="#6b7280" font-family="JetBrains Mono,monospace" font-size="10">$ <tspan fill="#e8ecf0">_</tspan></text>
+      <!-- status bar -->
+      <rect x="0" y="318" width="860" height="22" fill="#1a1d24"/>
+      <text x="14"  y="333" fill="#22c55e" font-family="JetBrains Mono,monospace" font-size="10">⎇ main</text>
+      <text x="80"  y="333" fill="#3d4250" font-family="JetBrains Mono,monospace" font-size="10">Ln 10, Col 3</text>
+      <text x="680" y="333" fill="#3d4250" font-family="JetBrains Mono,monospace" font-size="10">UTF-8  JS  DevHub</text>
+    </svg>
+  </div>
+</section>
+
+
+<!-- ══════ HOW IT WORKS ══════ -->
+<section class="how-section">
+  <div class="section-eyebrow">Platform Overview</div>
+  <h2 class="section-title">From Code to Collaboration in 4 Steps</h2>
+  <p class="section-sub">DevHub streamlines every stage of your development workflow — from first commit to production deploy.</p>
+  <div class="how-steps">
+    <div class="how-step">
+      <div class="how-icon-wrap hi-upload"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+      <h4>Upload Your Project</h4>
+      <p>Drag & drop a zip, clone via URL, or push directly with Git. Your code is live in seconds.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-icon-wrap hi-branch"><i class="fa-solid fa-code-branch"></i></div>
+      <h4>Branch & Version</h4>
+      <p>Create branches for features and fixes. Full Git history, diff viewer, and blame annotations.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-icon-wrap hi-collab"><i class="fa-solid fa-users"></i></div>
+      <h4>Review & Merge</h4>
+      <p>Open pull requests, leave inline comments, request reviews, and merge when ready.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-icon-wrap hi-deploy"><i class="fa-solid fa-rocket"></i></div>
+      <h4>Deploy & Monitor</h4>
+      <p>Trigger CI/CD pipelines, track build status, and monitor releases — all from one dashboard.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════ INFO STRIP ══════ -->
+<section class="info-strip">
+  <div class="info-grid">
+    <div class="info-block">
+      <svg width="64" height="48" viewBox="0 0 64 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="36" r="6" fill="#22c55e" opacity=".8"/>
+        <circle cx="12" cy="12" r="6" fill="#22c55e" opacity=".8"/>
+        <circle cx="52" cy="24" r="6" fill="#00e5ff" opacity=".8"/>
+        <line x1="12" y1="30" x2="12" y2="18" stroke="#2a2d36" stroke-width="2"/>
+        <path d="M12 12 Q32 12 52 24" stroke="#00e5ff" stroke-width="2" stroke-dasharray="4 3" fill="none"/>
+        <path d="M12 36 Q32 36 52 24" stroke="#22c55e" stroke-width="2" fill="none"/>
+        <text x="0"  y="48" fill="#3d4250" font-family="JetBrains Mono,monospace" font-size="8">main</text>
+        <text x="36" y="48" fill="#3d4250" font-family="JetBrains Mono,monospace" font-size="8">feature</text>
+      </svg>
+      <h3>Full Git Workflow</h3>
+      <p>DevHub is built on Git at its core. Every action — commit, branch, merge, rebase — is handled exactly as you'd expect from a professional version control platform. Works seamlessly with your existing tooling and IDE integrations.</p>
+    </div>
+    <div class="info-block">
+      <svg width="64" height="48" viewBox="0 0 64 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M32 4 L56 14 L56 30 C56 40 44 46 32 48 C20 46 8 40 8 30 L8 14 Z" fill="rgba(124,58,237,.15)" stroke="#7c3aed" stroke-width="1.5"/>
+        <path d="M22 24 L28 30 L42 18" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <h3>Security First</h3>
+      <p>Private repositories, fine-grained access control, secret scanning, and dependency vulnerability alerts. Your code is encrypted at rest and in transit with enterprise-grade security standards baked in by default.</p>
+    </div>
+    <div class="info-block">
+      <svg width="64" height="48" viewBox="0 0 64 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2"  y="18" width="14" height="14" rx="4" fill="rgba(245,158,11,.15)" stroke="#f59e0b" stroke-width="1.5"/>
+        <rect x="26" y="18" width="14" height="14" rx="4" fill="rgba(0,229,255,.1)"   stroke="#00e5ff" stroke-width="1.5"/>
+        <rect x="50" y="18" width="14" height="14" rx="4" fill="rgba(34,197,94,.1)"   stroke="#22c55e" stroke-width="1.5"/>
+        <line x1="16" y1="25" x2="26" y2="25" stroke="#2a2d36" stroke-width="2"/>
+        <line x1="40" y1="25" x2="50" y2="25" stroke="#2a2d36" stroke-width="2"/>
+        <text x="5"  y="30" fill="#f59e0b" font-family="JetBrains Mono,monospace" font-size="8">build</text>
+        <text x="29" y="30" fill="#00e5ff" font-family="JetBrains Mono,monospace" font-size="8">test</text>
+        <text x="50" y="30" fill="#22c55e" font-family="JetBrains Mono,monospace" font-size="8">ship</text>
+        <text x="8"  y="12" fill="#3d4250" font-family="JetBrains Mono,monospace" font-size="7">CI / CD Pipeline</text>
+      </svg>
+      <h3>Built-in CI/CD</h3>
+      <p>Automate your build, test, and deploy stages with DevHub Actions. Trigger workflows on push, PR, or schedule — with 200+ integrations including Docker, AWS, Vercel, and Kubernetes out of the box.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════ MAIN LAYOUT ══════ -->
+<div class="dh-layout">
+
+  <!-- LEFT SIDEBAR -->
+  <aside class="sidebar-left">
+    <div class="profile-card">
+      <div class="profile-avatar">SH</div>
+      <div class="profile-name">Sarvesh Haldikar</div>
+      <div class="profile-handle">@sarveshhaldikar</div>
+      <div class="profile-bio">Full-stack dev & open-source enthusiast. Nashik → Mumbai → Everywhere.</div>
+      <div class="profile-stats">
+        <span><strong>142</strong> followers</span>
+        <span><strong>89</strong> following</span>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Navigation</div>
+      <nav class="sidebar-nav">
+        <a href="#" class="active"><i class="fa-solid fa-house"></i> Home <span class="badge-count">Feed</span></a>
+        <a href="#"><i class="fa-solid fa-book-bookmark"></i> Repositories <span class="badge-count">24</span></a>
+        <a href="#"><i class="fa-solid fa-code-pull-request"></i> Pull Requests <span class="badge-count">7</span></a>
+        <a href="#"><i class="fa-solid fa-circle-dot"></i> Issues <span class="badge-count">13</span></a>
+        <a href="#"><i class="fa-solid fa-star"></i> Starred <span class="badge-count">81</span></a>
+        <a href="#"><i class="fa-solid fa-boxes-stacked"></i> Packages</a>
+        <a href="#"><i class="fa-solid fa-cloud-arrow-up"></i> Upload Project</a>
+      </nav>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Organizations</div>
+      <nav class="sidebar-nav">
+        <a href="#"><i class="fa-solid fa-building" style="color:var(--accent3)"></i> OpenLabs</a>
+        <a href="#"><i class="fa-solid fa-building" style="color:var(--accent2)"></i> DevCollective</a>
+        <a href="#"><i class="fa-solid fa-building" style="color:var(--green)"></i> CloudNative-IN</a>
+      </nav>
+    </div>
+  </aside>
+
+
+  <!-- MAIN -->
+  <main class="main-content">
+
+    <div class="action-bar">
+      <div class="action-avatar">AK</div>
+      <div class="fake-input">Start a new repo or upload your project…</div>
+      <div class="action-btns">
+        <button class="btn-outline"><i class="fa-solid fa-cloud-arrow-up"></i> Upload</button>
+        <button class="btn-new"><i class="fa-solid fa-plus"></i> New Repo</button>
+      </div>
+    </div>
+
+    <div class="upload-preview">
+      <i class="fa-regular fa-folder-open"></i>
+      <p>Drag & drop your project folder here, or <span>browse files</span></p>
+      <p style="font-size:.72rem;color:var(--text-dim);margin-top:6px">Supports .zip, .tar.gz — or link a remote Git URL</p>
+    </div>
+
+    <!-- Copilot banner -->
+    <div class="feature-banner">
+      <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
+        <rect width="52" height="52" rx="12" fill="rgba(124,58,237,.2)"/>
+        <path d="M16 26 L22 32 L36 18" stroke="#7c3aed" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="26" cy="26" r="14" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="3 2"/>
+      </svg>
+      <div>
+        <h4>✨ DevHub Copilot is now available</h4>
+        <p>AI-powered code suggestions, PR summaries, issue triage, and automated test generation — right inside your workflow.</p>
+        <a href="#">Enable Copilot on your repos →</a>
+      </div>
+    </div>
+
+    <div class="dh-tabs">
+      <div class="dh-tab active"><i class="fa-solid fa-list"></i> Feed</div>
+      <div class="dh-tab"><i class="fa-solid fa-book-bookmark"></i> Repos</div>
+      <div class="dh-tab"><i class="fa-solid fa-star"></i> Starred</div>
+      <div class="dh-tab"><i class="fa-solid fa-users"></i> Following</div>
+    </div>
+
+    <div class="section-head">
+      <h2>Your Repositories</h2>
+      <a href="#">View all →</a>
+    </div>
+
+    <!-- Repo 1 -->
+    <div class="repo-card">
+      <div class="repo-thumb">
+        <svg viewBox="0 0 420 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+          <rect width="420" height="80" fill="#0d0f18"/>
+          <rect x="0" y="0" width="4" height="80" fill="#f7df1e" opacity=".6"/>
+          <text x="14" y="20" fill="#7c3aed" font-family="JetBrains Mono,monospace" font-size="10">import</text>
+          <text x="60" y="20" fill="#e8ecf0" font-family="JetBrains Mono,monospace" font-size="10">{ NavBar, Sidebar }</text>
+          <text x="180" y="20" fill="#7c3aed" font-family="JetBrains Mono,monospace" font-size="10">from</text>
+          <text x="210" y="20" fill="#22c55e" font-family="JetBrains Mono,monospace" font-size="10">'./components'</text>
+          <text x="14" y="38" fill="#6b7280" font-family="JetBrains Mono,monospace" font-size="10">// Main dashboard entry point</text>
+          <text x="14" y="56" fill="#7c3aed" font-family="JetBrains Mono,monospace" font-size="10">const</text>
+          <text x="50" y="56" fill="#00e5ff" font-family="JetBrains Mono,monospace" font-size="10">app</text>
+          <text x="74" y="56" fill="#e8ecf0" font-family="JetBrains Mono,monospace" font-size="10">= new</text>
+          <text x="110" y="56" fill="#f59e0b" font-family="JetBrains Mono,monospace" font-size="10">DevHubApp</text>
+          <text x="180" y="56" fill="#e8ecf0" font-family="JetBrains Mono,monospace" font-size="10">({ theme: 'dark' })</text>
+          <text x="14" y="72" fill="#7c3aed" font-family="JetBrains Mono,monospace" font-size="10">app.mount</text>
+          <text x="78" y="72" fill="#e8ecf0" font-family="JetBrains Mono,monospace" font-size="10">('#root')</text>
+        </svg>
+      </div>
+      <div class="repo-card-header">
+        <div class="repo-name"><i class="fa-solid fa-lock-open" style="font-size:.75rem;color:var(--text-muted)"></i> aryan / devhub-ui</div>
+        <div class="repo-actions">
+          <button class="repo-btn"><i class="fa-regular fa-star"></i> 48</button>
+          <button class="repo-btn"><i class="fa-solid fa-code-fork"></i> 12</button>
+          <span class="repo-visibility pub">Public</span>
+        </div>
+      </div>
+      <div class="repo-desc">A GitHub-inspired developer platform built with Vanilla JS and custom CSS design tokens.</div>
+      <div class="repo-meta">
+        <span><span class="lang-dot" style="background:#f7df1e"></span>JavaScript</span>
+        <span><i class="fa-regular fa-clock"></i> Updated 2h ago</span>
+        <span><i class="fa-solid fa-circle-dot"></i> 4 issues</span>
+      </div>
+    </div>
+
+    <!-- Repo 2 -->
+    <div class="repo-card">
+      <div class="repo-thumb">
+        <svg viewBox="0 0 420 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+          <rect width="420" height="80" fill="#0a0c14"/>
+          <rect x="0" y="0" width="4" height="80" fill="#dea584" opacity=".6"/>
+          <text x="14" y="20" fill="#6b7280" font-family="JetBrains Mono,monospace" font-size="10">// api-gateway-rs · Rust</text>
+          <text x="14" y="38" fill="#7c3aed" font-family="JetBrains Mono,monospace" font-size="10">use</text>
+          <text x="38" y="38" fill="#e8ecf0" font-family="JetBrains Mono,monospace" font-size="10">actix_web::{ web, App, HttpServer };</text>
+          <text x="14" y="56" fill="#7c3aed" font-family="JetBrains Mono,monospace" font-size="10">async fn</text>
+          <text x="66" y="56" fill="#00e5ff" font-family="JetBrains Mono,monospace" font-size="10">route_request</text>
+          <text x="168" y="56" fill="#e8ecf0" font-family="JetBrains Mono,monospace" font-size="10">(req: Request) -&gt;</text>
+          <text x="284" y="56" fill="#22c55e" font-family="JetBrains Mono,monospace" font-size="10">Response {"{"}</text>
+          <text x="14" y="72" fill="#e8ecf0" font-family="JetBrains Mono,monospace" font-size="10">  HttpServer::new(|| App::new().service(route_request))</text>
+        </svg>
+      </div>
+      <div class="repo-card-header">
+        <div class="repo-name"><i class="fa-solid fa-lock" style="font-size:.75rem;color:var(--text-muted)"></i> aryan / api-gateway-rs</div>
+        <div class="repo-actions">
+          <button class="repo-btn"><i class="fa-regular fa-star"></i> 121</button>
+          <button class="repo-btn"><i class="fa-solid fa-code-fork"></i> 34</button>
+          <span class="repo-visibility priv">Private</span>
+        </div>
+      </div>
+      <div class="repo-desc">High-performance API gateway written in Rust. Handles routing, auth middleware & rate limiting.</div>
+      <div class="repo-meta">
+        <span><span class="lang-dot" style="background:#dea584"></span>Rust</span>
+        <span><i class="fa-regular fa-clock"></i> Updated 1d ago</span>
+        <span><i class="fa-solid fa-code-pull-request"></i> 2 PRs</span>
+      </div>
+    </div>
+
+    <!-- Repo 3 -->
+    <div class="repo-card">
+      <div class="repo-thumb">
+        <svg viewBox="0 0 420 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+          <rect width="420" height="80" fill="#0b0d16"/>
+          <rect x="0" y="0" width="4" height="80" fill="#3572A5" opacity=".6"/>
+          <text x="14" y="20" fill="#6b7280" font-family="JetBrains Mono,monospace" font-size="10"># ml-notebooks · Python + PyTorch</text>
+          <text x="14" y="38" fill="#7c3aed" font-family="JetBrains Mono,monospace" font-size="10">import</text>
+          <text x="60" y="38" fill="#e8ecf0" font-family="JetBrains Mono,monospace" font-size="10">torch;</text>
+          <text x="96" y="38" fill="#7c3aed" font-family="JetBrains Mono,monospace" font-size="10">from</text>
+          <text x="124" y="38" fill="#22c55e" font-family="JetBrains Mono,monospace" font-size="10">transformers</text>
+          <text x="214" y="38" fill="#7c3aed" font-family="JetBrains Mono,monospace" font-size="10">import</text>
+          <text x="260" y="38" fill="#00e5ff" font-family="JetBrains Mono,monospace" font-size="10">AutoModel</text>
+          <text x="14" y="56" fill="#00e5ff" font-family="JetBrains Mono,monospace" font-size="10">model</text>
+          <text x="56" y="56" fill="#e8ecf0" font-family="JetBrains Mono,monospace" font-size="10">= AutoModel.from_pretrained('bert-base-uncased')</text>
+          <text x="14" y="72" fill="#f59e0b" font-family="JetBrains Mono,monospace" font-size="10">outputs</text>
+          <text x="68" y="72" fill="#e8ecf0" font-family="JetBrains Mono,monospace" font-size="10">= model(**inputs)</text>
+        </svg>
+      </div>
+      <div class="repo-card-header">
+        <div class="repo-name"><i class="fa-solid fa-lock-open" style="font-size:.75rem;color:var(--text-muted)"></i> aryan / ml-notebooks</div>
+        <div class="repo-actions">
+          <button class="repo-btn"><i class="fa-regular fa-star"></i> 77</button>
+          <button class="repo-btn"><i class="fa-solid fa-code-fork"></i> 22</button>
+          <span class="repo-visibility pub">Public</span>
+        </div>
+      </div>
+      <div class="repo-desc">Collection of ML/DL notebooks — NLP, vision, RL experiments with PyTorch & Hugging Face.</div>
+      <div class="repo-meta">
+        <span><span class="lang-dot" style="background:#3572A5"></span>Python</span>
+        <span><i class="fa-regular fa-clock"></i> Updated 3d ago</span>
+        <span><i class="fa-solid fa-circle-dot"></i> 9 issues</span>
+      </div>
+    </div>
+
+    <!-- Repo 4 -->
+    <div class="repo-card">
+      <div class="repo-thumb">
+        <svg viewBox="0 0 420 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+          <rect width="420" height="80" fill="#090b12"/>
+          <rect x="0" y="0" width="4" height="80" fill="#89e051" opacity=".6"/>
+          <text x="14" y="20" fill="#6b7280" font-family="JetBrains Mono,monospace" font-size="10">#!/bin/bash  # cli-toolkit</text>
+          <text x="14" y="38" fill="#00e5ff" font-family="JetBrains Mono,monospace" font-size="10">scaffold()</text>
+          <text x="90" y="38" fill="#e8ecf0" font-family="JetBrains Mono,monospace" font-size="10">{"{ "}mkdir -p "$1"/{"{"}src,tests,docs{"}"}</text>
+          <text x="14" y="56" fill="#22c55e" font-family="JetBrains Mono,monospace" font-size="10">  echo</text>
+          <text x="54" y="56" fill="#f59e0b" font-family="JetBrains Mono,monospace" font-size="10">"✓ Project $1 scaffolded"</text>
+          <text x="14" y="72" fill="#e8ecf0" font-family="JetBrains Mono,monospace" font-size="10">  git init "$1" &amp;&amp; cd "$1"; {"}"}</text>
+        </svg>
+      </div>
+      <div class="repo-card-header">
+        <div class="repo-name"><i class="fa-solid fa-lock-open" style="font-size:.75rem;color:var(--text-muted)"></i> aryan / cli-toolkit</div>
+        <div class="repo-actions">
+          <button class="repo-btn"><i class="fa-regular fa-star"></i> 33</button>
+          <button class="repo-btn"><i class="fa-solid fa-code-fork"></i> 8</button>
+          <span class="repo-visibility pub">Public</span>
+        </div>
+      </div>
+      <div class="repo-desc">Developer CLI utilities for scaffolding, linting configs, and deploy automation scripts.</div>
+      <div class="repo-meta">
+        <span><span class="lang-dot" style="background:#89e051"></span>Shell</span>
+        <span><i class="fa-regular fa-clock"></i> Updated 1w ago</span>
+        <span><i class="fa-solid fa-code-pull-request"></i> 1 PR</span>
+      </div>
+    </div>
+
+    <!-- Contribution graph -->
+    <div class="contrib-section" style="margin-top:28px">
+      <div class="contrib-title">
+        <span>Contribution Activity · 2025</span>
+        <span>342 contributions</span>
+      </div>
+      <div class="contrib-grid" id="contrib-grid"></div>
+    </div>
+
+    <!-- Blog section -->
+    <div style="margin-top:28px">
+      <div class="section-head">
+        <h2><i class="fa-solid fa-newspaper" style="color:var(--accent3);margin-right:6px"></i>From the DevHub Blog</h2>
+        <a href="#">All articles →</a>
+      </div>
+      <div class="blog-grid">
+        <!-- Blog 1 -->
+        <div class="blog-card">
+          <div class="blog-thumb">
+            <svg viewBox="0 0 360 110" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+              <defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#00e5ff"/><stop offset="100%" stop-color="#7c3aed"/></linearGradient></defs>
+              <rect width="360" height="110" fill="#0d1020"/>
+              <circle cx="60"  cy="55" r="40" fill="rgba(0,229,255,.06)" stroke="rgba(0,229,255,.12)" stroke-width="1"/>
+              <circle cx="60"  cy="55" r="24" fill="rgba(0,229,255,.1)"  stroke="rgba(0,229,255,.22)" stroke-width="1"/>
+              <circle cx="60"  cy="55" r="10" fill="#00e5ff" opacity=".4"/>
+              <text x="118" y="36" fill="#e8ecf0" font-family="Syne,sans-serif" font-size="14" font-weight="800">Git Internals</text>
+              <text x="118" y="54" fill="#6b7280" font-family="Syne,sans-serif" font-size="11">How commits really work</text>
+              <text x="118" y="70" fill="#6b7280" font-family="Syne,sans-serif" font-size="11">under the hood — objects,</text>
+              <text x="118" y="86" fill="#6b7280" font-family="Syne,sans-serif" font-size="11">refs, and the DAG.</text>
+              <rect x="0" y="0" width="360" height="4" fill="url(#g1)"/>
+            </svg>
+          </div>
+          <div class="blog-body">
+            <div class="blog-tag">Engineering</div>
+            <div class="blog-title">Deep Dive: How Git Stores Your Code</div>
+            <div class="blog-meta"><span>May 2025</span><span>8 min read</span></div>
+          </div>
+        </div>
+        <!-- Blog 2 -->
+        <div class="blog-card">
+          <div class="blog-thumb">
+            <svg viewBox="0 0 360 110" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+              <defs><linearGradient id="g2" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#22c55e"/></linearGradient></defs>
+              <rect width="360" height="110" fill="#100d1a"/>
+              <circle cx="50"  cy="55" r="10" fill="#f59e0b" opacity=".8"/>
+              <line x1="60" y1="55" x2="100" y2="55" stroke="#2a2d36" stroke-width="2" stroke-dasharray="4 3"/>
+              <circle cx="110" cy="55" r="10" fill="#00e5ff" opacity=".8"/>
+              <line x1="120" y1="55" x2="160" y2="55" stroke="#2a2d36" stroke-width="2" stroke-dasharray="4 3"/>
+              <circle cx="170" cy="55" r="10" fill="#22c55e" opacity=".8"/>
+              <text x="38"  y="78" fill="#f59e0b" font-family="JetBrains Mono,monospace" font-size="9">build</text>
+              <text x="99"  y="78" fill="#00e5ff" font-family="JetBrains Mono,monospace" font-size="9">test</text>
+              <text x="157" y="78" fill="#22c55e" font-family="JetBrains Mono,monospace" font-size="9">deploy</text>
+              <text x="200" y="36" fill="#e8ecf0" font-family="Syne,sans-serif" font-size="13" font-weight="800">CI/CD Patterns</text>
+              <text x="200" y="54" fill="#6b7280" font-family="Syne,sans-serif" font-size="11">Best practices for</text>
+              <text x="200" y="70" fill="#6b7280" font-family="Syne,sans-serif" font-size="11">fast, reliable pipelines.</text>
+              <rect x="0" y="0" width="360" height="4" fill="url(#g2)"/>
+            </svg>
+          </div>
+          <div class="blog-body">
+            <div class="blog-tag">DevOps</div>
+            <div class="blog-title">CI/CD Patterns That Scale With Your Team</div>
+            <div class="blog-meta"><span>Apr 2025</span><span>6 min read</span></div>
+          </div>
+        </div>
+        <!-- Blog 3 -->
+        <div class="blog-card">
+          <div class="blog-thumb">
+            <svg viewBox="0 0 360 110" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+              <defs><linearGradient id="g3" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#22c55e"/><stop offset="100%" stop-color="#7c3aed"/></linearGradient></defs>
+              <rect width="360" height="110" fill="#0c1008"/>
+              <circle cx="40"  cy="35" r="8" fill="#22c55e" opacity=".8"/>
+              <circle cx="40"  cy="75" r="8" fill="#22c55e" opacity=".8"/>
+              <circle cx="120" cy="55" r="8" fill="#7c3aed" opacity=".8"/>
+              <line x1="40" y1="43" x2="40" y2="67" stroke="#2a2d36" stroke-width="2"/>
+              <path d="M40 35 Q80 35 120 55" stroke="#7c3aed" stroke-width="1.5" fill="none" stroke-dasharray="4 3"/>
+              <path d="M40 75 Q80 75 120 55" stroke="#22c55e" stroke-width="1.5" fill="none"/>
+              <rect x="144" y="43" width="64" height="24" rx="5" fill="rgba(34,197,94,.1)" stroke="#22c55e" stroke-width="1"/>
+              <text x="152" y="59" fill="#22c55e" font-family="JetBrains Mono,monospace" font-size="9">✓ merged</text>
+              <text x="220" y="33" fill="#e8ecf0" font-family="Syne,sans-serif" font-size="13" font-weight="800">PR Reviews</text>
+              <text x="220" y="51" fill="#6b7280" font-family="Syne,sans-serif" font-size="11">Ship code faster with</text>
+              <text x="220" y="67" fill="#6b7280" font-family="Syne,sans-serif" font-size="11">async code reviews.</text>
+              <rect x="0" y="0" width="360" height="4" fill="url(#g3)"/>
+            </svg>
+          </div>
+          <div class="blog-body">
+            <div class="blog-tag">Collaboration</div>
+            <div class="blog-title">The Art of the Perfect Pull Request</div>
+            <div class="blog-meta"><span>Mar 2025</span><span>5 min read</span></div>
+          </div>
+        </div>
+        <!-- Blog 4 -->
+        <div class="blog-card">
+          <div class="blog-thumb">
+            <svg viewBox="0 0 360 110" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+              <defs><linearGradient id="g4" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#ef4444"/><stop offset="100%" stop-color="#f59e0b"/></linearGradient></defs>
+              <rect width="360" height="110" fill="#100a08"/>
+              <path d="M60 18 L90 28 L90 54 C90 68 75 76 60 80 C45 76 30 68 30 54 L30 28 Z" fill="rgba(239,68,68,.1)" stroke="#ef4444" stroke-width="1.5"/>
+              <path d="M48 48 L56 56 L72 42" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <text x="108" y="34" fill="#e8ecf0" font-family="Syne,sans-serif" font-size="13" font-weight="800">Secure by Default</text>
+              <text x="108" y="52" fill="#6b7280" font-family="Syne,sans-serif" font-size="11">Secret scanning,</text>
+              <text x="108" y="68" fill="#6b7280" font-family="Syne,sans-serif" font-size="11">Dependabot, and SAST</text>
+              <text x="108" y="84" fill="#6b7280" font-family="Syne,sans-serif" font-size="11">explained.</text>
+              <rect x="0" y="0" width="360" height="4" fill="url(#g4)"/>
+            </svg>
+          </div>
+          <div class="blog-body">
+            <div class="blog-tag">Security</div>
+            <div class="blog-title">Keeping Your Repos Safe: A Practical Guide</div>
+            <div class="blog-meta"><span>Feb 2025</span><span>7 min read</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Activity feed -->
+    <div style="margin-top:8px">
+      <div class="section-head">
+        <h2>Recent Activity</h2>
+        <a href="#">All activity →</a>
+      </div>
+      <div class="activity-item">
+        <div class="activity-icon ai-push"><i class="fa-solid fa-code-commit"></i></div>
+        <div class="activity-text">
+          <strong>You</strong> pushed 3 commits to <a href="#" class="repo-link">aryan/devhub-ui</a>
+          <div style="font-family:var(--font-code);font-size:.73rem;color:var(--text-dim);margin-top:3px">fix: navbar blur on Safari · feat: repo card hover · chore: update deps</div>
+        </div>
+        <div class="activity-time">2h ago</div>
+      </div>
+      <div class="activity-item">
+        <div class="activity-icon ai-star"><i class="fa-solid fa-star"></i></div>
+        <div class="activity-text"><strong>priya_dev</strong> starred <a href="#" class="repo-link">aryan/api-gateway-rs</a></div>
+        <div class="activity-time">5h ago</div>
+      </div>
+      <div class="activity-item">
+        <div class="activity-icon ai-pr"><i class="fa-solid fa-code-pull-request"></i></div>
+        <div class="activity-text"><strong>You</strong> opened PR <a href="#" class="repo-link">#14 — add rate-limit bypass header</a> in <a href="#" class="repo-link">aryan/api-gateway-rs</a></div>
+        <div class="activity-time">1d ago</div>
+      </div>
+      <div class="activity-item">
+        <div class="activity-icon ai-fork"><i class="fa-solid fa-code-fork"></i></div>
+        <div class="activity-text"><strong>rahul_oss</strong> forked <a href="#" class="repo-link">aryan/ml-notebooks</a></div>
+        <div class="activity-time">2d ago</div>
+      </div>
+      <div class="activity-item">
+        <div class="activity-icon ai-push"><i class="fa-solid fa-code-commit"></i></div>
+        <div class="activity-text"><strong>You</strong> pushed initial commit to <a href="#" class="repo-link">aryan/cli-toolkit</a></div>
+        <div class="activity-time">1w ago</div>
+      </div>
+    </div>
+  </main>
+
+
+  <!-- RIGHT SIDEBAR -->
+  <aside class="sidebar-right">
+
+    <!-- Pro upgrade -->
+    <div class="widget-card" style="background:linear-gradient(135deg,rgba(0,229,255,.07),rgba(124,58,237,.08));border-color:rgba(0,229,255,.2)">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="40" height="40" rx="10" fill="rgba(0,229,255,.1)"/>
+          <path d="M12 28 L20 12 L28 28" stroke="#00e5ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <line x1="15" y1="22" x2="25" y2="22" stroke="#00e5ff" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <div>
+          <div style="font-weight:800;font-size:.88rem">DevHub Pro</div>
+          <div style="font-size:.72rem;color:var(--text-muted)">Unlimited private repos + CI minutes</div>
+        </div>
+      </div>
+      <button class="btn-new" style="width:100%;justify-content:center">Upgrade · ₹499/mo</button>
+    </div>
+
+    <!-- Trending -->
+    <div class="widget-card">
+      <div class="widget-title"><i class="fa-solid fa-fire-flame-curved" style="color:var(--accent3)"></i> &nbsp;Trending Today</div>
+      <div class="trending-item"><div class="trend-rank">01</div><div class="trend-info"><div class="trend-name">vercel / turborepo</div><div class="trend-desc">High-performance build system for JS monorepos</div><div class="trend-stars"><i class="fa-solid fa-star"></i> 26.4k · +480 today</div></div></div>
+      <div class="trending-item"><div class="trend-rank">02</div><div class="trend-info"><div class="trend-name">tauri-apps / tauri</div><div class="trend-desc">Build desktop apps with web frontend &amp; Rust</div><div class="trend-stars"><i class="fa-solid fa-star"></i> 81.2k · +360 today</div></div></div>
+      <div class="trending-item"><div class="trend-rank">03</div><div class="trend-info"><div class="trend-name">ggerganov / llama.cpp</div><div class="trend-desc">LLM inference in pure C/C++</div><div class="trend-stars"><i class="fa-solid fa-star"></i> 64.1k · +290 today</div></div></div>
+      <div class="trending-item"><div class="trend-rank">04</div><div class="trend-info"><div class="trend-name">astral-sh / uv</div><div class="trend-desc">An extremely fast Python package installer</div><div class="trend-stars"><i class="fa-solid fa-star"></i> 18.9k · +210 today</div></div></div>
+    </div>
+
+    <!-- Language donut + bars -->
+    <div class="widget-card">
+      <div class="widget-title"><i class="fa-solid fa-chart-bar" style="color:var(--accent)"></i> &nbsp;Your Language Mix</div>
+      <svg viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" style="width:100%;margin-bottom:12px">
+        <circle cx="40" cy="40" r="28" fill="none" stroke="#1a1d24" stroke-width="14"/>
+        <circle cx="40" cy="40" r="28" fill="none" stroke="#f7df1e" stroke-width="14" stroke-dasharray="75 101" stroke-dashoffset="0" transform="rotate(-90 40 40)"/>
+        <circle cx="40" cy="40" r="28" fill="none" stroke="#3572A5" stroke-width="14" stroke-dasharray="50 101" stroke-dashoffset="-75" transform="rotate(-90 40 40)"/>
+        <circle cx="40" cy="40" r="28" fill="none" stroke="#dea584" stroke-width="14" stroke-dasharray="32 101" stroke-dashoffset="-125" transform="rotate(-90 40 40)"/>
+        <circle cx="40" cy="40" r="28" fill="none" stroke="#89e051" stroke-width="14" stroke-dasharray="21 101" stroke-dashoffset="-157" transform="rotate(-90 40 40)"/>
+        <text x="40" y="38" text-anchor="middle" fill="#e8ecf0" font-family="JetBrains Mono,monospace" font-size="9" font-weight="700">4 langs</text>
+        <text x="40" y="50" text-anchor="middle" fill="#6b7280" font-family="JetBrains Mono,monospace" font-size="7">24 repos</text>
+        <rect x="82" y="10" width="8" height="8" rx="2" fill="#f7df1e"/>
+        <text x="94" y="18" fill="#6b7280" font-family="JetBrains Mono,monospace" font-size="8">JS 42%</text>
+        <rect x="82" y="24" width="8" height="8" rx="2" fill="#3572A5"/>
+        <text x="94" y="32" fill="#6b7280" font-family="JetBrains Mono,monospace" font-size="8">Py 28%</text>
+        <rect x="82" y="38" width="8" height="8" rx="2" fill="#dea584"/>
+        <text x="94" y="46" fill="#6b7280" font-family="JetBrains Mono,monospace" font-size="8">Rs 18%</text>
+        <rect x="82" y="52" width="8" height="8" rx="2" fill="#89e051"/>
+        <text x="94" y="60" fill="#6b7280" font-family="JetBrains Mono,monospace" font-size="8">Sh 12%</text>
+      </svg>
+      <div class="lang-legend">
+        <div class="lang-row"><span class="lang-dot" style="background:#f7df1e"></span><span style="font-size:.78rem;width:80px">JavaScript</span><div class="lang-bar-wrap"><div class="lang-bar" style="width:42%;background:#f7df1e"></div></div><div class="lang-pct">42%</div></div>
+        <div class="lang-row"><span class="lang-dot" style="background:#3572A5"></span><span style="font-size:.78rem;width:80px">Python</span><div class="lang-bar-wrap"><div class="lang-bar" style="width:28%;background:#3572A5"></div></div><div class="lang-pct">28%</div></div>
+        <div class="lang-row"><span class="lang-dot" style="background:#dea584"></span><span style="font-size:.78rem;width:80px">Rust</span><div class="lang-bar-wrap"><div class="lang-bar" style="width:18%;background:#dea584"></div></div><div class="lang-pct">18%</div></div>
+        <div class="lang-row"><span class="lang-dot" style="background:#89e051"></span><span style="font-size:.78rem;width:80px">Shell</span><div class="lang-bar-wrap"><div class="lang-bar" style="width:12%;background:#89e051"></div></div><div class="lang-pct">12%</div></div>
+      </div>
+    </div>
+
+    <!-- Topics -->
+    <div class="widget-card">
+      <div class="widget-title"><i class="fa-solid fa-tags" style="color:var(--accent2)"></i> &nbsp;Explore Topics</div>
+      <div>
+        <span class="topic-chip">react</span><span class="topic-chip">rust</span><span class="topic-chip">ai</span>
+        <span class="topic-chip">devtools</span><span class="topic-chip">cli</span><span class="topic-chip">python</span>
+        <span class="topic-chip">webassembly</span><span class="topic-chip">oss</span><span class="topic-chip">api</span>
+        <span class="topic-chip">machine-learning</span><span class="topic-chip">typescript</span>
+      </div>
+    </div>
+
+    <!-- Learn -->
+    <div class="widget-card">
+      <div class="widget-title"><i class="fa-solid fa-graduation-cap" style="color:var(--green)"></i> &nbsp;Learn DevHub</div>
+      <div class="learn-item">
+        <div class="learn-icon li-doc"><i class="fa-solid fa-file-lines"></i></div>
+        <div class="learn-text"><h5>Getting Started Guide</h5><p>Create your first repo, make a commit, and open a PR in 10 minutes.</p></div>
+      </div>
+      <div class="learn-item">
+        <div class="learn-icon li-vid"><i class="fa-solid fa-play"></i></div>
+        <div class="learn-text"><h5>Video: Git Workflows</h5><p>Trunk-based dev vs Gitflow — which is right for your team?</p></div>
+      </div>
+      <div class="learn-item">
+        <div class="learn-icon li-tut"><i class="fa-solid fa-terminal"></i></div>
+        <div class="learn-text"><h5>Interactive CLI Tutorial</h5><p>Practice Git commands in a sandboxed terminal — no install needed.</p></div>
+      </div>
+    </div>
+
+    <!-- Suggested devs -->
+    <div class="widget-card">
+      <div class="widget-title"><i class="fa-solid fa-user-plus" style="color:var(--green)"></i> &nbsp;Suggested Devs</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#06b6d4);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700">SK</div>
+          <div style="flex:1"><div style="font-size:.82rem;font-weight:700">@savitri_k</div><div style="font-size:.73rem;color:var(--text-muted)">Compilers · Systems</div></div>
+          <button class="btn-outline" style="padding:3px 10px;font-size:.72rem">Follow</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#ef4444);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700">RM</div>
+          <div style="flex:1"><div style="font-size:.82rem;font-weight:700">@rohan_m</div><div style="font-size:.73rem;color:var(--text-muted)">React · UX Engineering</div></div>
+          <button class="btn-outline" style="padding:3px 10px;font-size:.72rem">Follow</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#22c55e,#3572A5);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700">PD</div>
+          <div style="flex:1"><div style="font-size:.82rem;font-weight:700">@priya_dev</div><div style="font-size:.73rem;color:var(--text-muted)">ML · Infra</div></div>
+          <button class="btn-outline" style="padding:3px 10px;font-size:.72rem">Follow</button>
+        </div>
+      </div>
+    </div>
+
+  </aside>
+</div>
+
+
+<!-- ══════ FOOTER ══════ -->
+<footer class="dh-footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="#" class="dh-logo"><i class="fa-solid fa-code-branch"></i><span><span class="bracket">{</span>DevHub<span class="bracket">}</span></span></a>
+      <p>The platform where developers build, collaborate, and ship software. Open source at heart — powerful at scale.</p>
+      <div class="footer-socials">
+        <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+        <a href="#"><i class="fa-brands fa-github"></i></a>
+        <a href="#"><i class="fa-brands fa-discord"></i></a>
+        <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h5>Product</h5>
+      <a href="#">Repositories</a><a href="#">Actions (CI/CD)</a><a href="#">Packages</a><a href="#">Security</a><a href="#">Copilot AI</a>
+    </div>
+    <div class="footer-col">
+      <h5>Developers</h5>
+      <a href="#">Documentation</a><a href="#">API Reference</a><a href="#">CLI Tools</a><a href="#">Marketplace</a><a href="#">Status Page</a>
+    </div>
+    <div class="footer-col">
+      <h5>Company</h5>
+      <a href="#">About</a><a href="#">Blog</a><a href="#">Careers</a><a href="#">Privacy Policy</a><a href="#">Terms of Service</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 DevHub, Inc. — Made with <span style="color:var(--red)">♥</span> in Nashik, India</span>
+    <div><a href="#">Terms</a><a href="#">Privacy</a><a href="#">Cookies</a></div>
+    <span>v0.1.0-wireframe</span>
+  </div>
+</footer>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Contribution graph
+  const grid = document.getElementById('contrib-grid');
+  const levels = [0,0,0,1,1,1,2,2,3,3,4];
+  for (let i = 0; i < 364; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'contrib-cell c' + levels[Math.floor(Math.random() * levels.length)];
+    grid.appendChild(cell);
+  }
+  // Tabs
+  document.querySelectorAll('.dh-tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+      document.querySelectorAll('.dh-tab').forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+  // Sidebar nav
+  document.querySelectorAll('.sidebar-nav a').forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      document.querySelectorAll('.sidebar-nav a').forEach(l => l.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+  // Repo card hover
+  document.querySelectorAll('.repo-card').forEach(card => {
+    card.addEventListener('mouseenter', () => card.style.boxShadow = '0 0 0 1px var(--accent2)');
+    card.addEventListener('mouseleave', () => card.style.boxShadow = '');
+  });
+  // Blog card hover
+  document.querySelectorAll('.blog-card').forEach(card => {
+    card.addEventListener('mouseenter', () => card.style.boxShadow = '0 8px 24px rgba(0,0,0,.4)');
+    card.addEventListener('mouseleave', () => card.style.boxShadow = '');
+  });
+</script>
+</body>
+</html>
+
