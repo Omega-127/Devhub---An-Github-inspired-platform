@@ -1,4 +1,4 @@
-# Devhub---An-Github-inspired-platform
+# Devhub---A-Github-inspired-platform
 A visually inspired GitHub-style website wireframe built using HTML, CSS, and Bootstrap. 
 This project focuses on frontend design and layout, featuring a structured repository view, vertically aligned repo cards, a responsive navigation bar with dropdowns, a gallery section, achievements showcase with hover effects, and a contact form.
 
