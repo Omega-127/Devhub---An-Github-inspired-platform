@@ -1710,6 +1710,160 @@
         opacity: 0;
       }
     }
+
+    /* ── SCROLL REVEALS ── */
+    .reveal-on-scroll {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+    
+    .reveal-on-scroll.is-revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── COMMAND PALETTE ── */
+    .cmd-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 12, 16, 0.7);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 10000;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 12vh;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s, visibility 0.2s;
+    }
+    .cmd-backdrop.show {
+      opacity: 1;
+      visibility: visible;
+    }
+    .cmd-palette {
+      width: 90%;
+      max-width: 600px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(0, 229, 255, 0.2);
+      overflow: hidden;
+      transform: scale(0.96) translateY(-10px);
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .cmd-backdrop.show .cmd-palette {
+      transform: scale(1) translateY(0);
+    }
+    .cmd-header {
+      display: flex;
+      align-items: center;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      gap: 12px;
+    }
+    #cmd-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text-main);
+      font-size: 1rem;
+      font-family: var(--font-ui);
+    }
+    #cmd-input::placeholder {
+      color: var(--text-dim);
+    }
+    .cmd-esc {
+      font-family: var(--font-code);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 3px 6px;
+      background: var(--bg-deep);
+    }
+    .cmd-body {
+      max-height: 340px;
+      overflow-y: auto;
+      padding: 8px 0;
+    }
+    .cmd-section {
+      font-family: var(--font-code);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-dim);
+      padding: 8px 20px;
+      margin-top: 4px;
+    }
+    .cmd-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 20px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-left: 2px solid transparent;
+      transition: background 0.15s, color 0.15s;
+    }
+    .cmd-item i {
+      width: 16px;
+      text-align: center;
+    }
+    .cmd-item:hover, .cmd-item.active {
+      background: rgba(0, 229, 255, 0.06);
+      color: var(--text-main);
+      border-left-color: var(--accent);
+    }
+
+    /* ── EASTER EGGS CSS ── */
+    body.overclocked {
+      --accent: #ef4444; 
+      --accent2: #f59e0b; 
+      --bg-deep: #1a0505; 
+      --border: #3f1010;
+    }
+    body.overclocked .btn-hero-primary {
+      animation: pulse-glow-fast 0.5s infinite alternate;
+    }
+    @keyframes pulse-glow-fast {
+      from { box-shadow: 0 0 10px rgba(239, 68, 68, 0.5); }
+      to { box-shadow: 0 0 35px rgba(239, 68, 68, 1); }
+    }
+    @keyframes overclockBlink { 50% { opacity: 0.5; } }
+    .overclock-badge {
+      position: fixed; top: 70px; right: 20px; 
+      background: rgba(239,68,68,0.2); color: #ef4444; 
+      border: 1px solid #ef4444; padding: 6px 12px; 
+      border-radius: 4px; font-family: var(--font-code); 
+      font-size: 0.8rem; font-weight: bold; z-index: 9999; 
+      animation: overclockBlink 1s infinite;
+    }
+    
+    body.theme-corrupted {
+      --bg-deep: #001100;
+      --bg-card: #002200;
+      --bg-hover: #003300;
+      --border: #00ff00;
+      --text-main: #00ff00;
+      --text-muted: #00aa00;
+      --text-dim: #005500;
+      --accent: #00ff00;
+      --accent2: #00ff00;
+    }
+    body.theme-corrupted * {
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      font-family: 'Courier New', Courier, monospace !important;
+    }
+    body.theme-corrupted svg {
+      filter: grayscale(100%) sepia(100%) hue-rotate(80deg) saturate(300%);
+    }
   </style>
 </head>
 
@@ -1748,7 +1902,7 @@
       <a href="#">Explore</a><a href="#">Issues</a><a href="#">Pulls</a><a href="#">Marketplace</a>
     </div>
     <button class="btn-new ms-2"><i class="fa-solid fa-plus"></i> New</button>
-    <div class="avatar ms-2">SH</div>
+    <div class="avatar ms-2">AK</div>
   </nav>
 
 
@@ -2021,7 +2175,7 @@
     <main class="main-content">
 
       <div class="action-bar">
-        <div class="action-avatar">SH</div>
+        <div class="action-avatar">AK</div>
         <div class="fake-input">Start a new repo or upload your project…</div>
         <div class="action-btns">
           <button class="btn-outline"><i class="fa-solid fa-cloud-arrow-up"></i> Upload</button>
@@ -2054,12 +2208,13 @@
       </div>
 
       <div class="dh-tabs">
-        <div class="dh-tab active"><i class="fa-solid fa-list"></i> Feed</div>
-        <div class="dh-tab"><i class="fa-solid fa-book-bookmark"></i> Repos</div>
-        <div class="dh-tab"><i class="fa-solid fa-star"></i> Starred</div>
-        <div class="dh-tab"><i class="fa-solid fa-users"></i> Following</div>
+        <div class="dh-tab" data-target="tab-feed"><i class="fa-solid fa-list"></i> Feed</div>
+        <div class="dh-tab active" data-target="tab-repos"><i class="fa-solid fa-book-bookmark"></i> Repos</div>
+        <div class="dh-tab" data-target="tab-starred"><i class="fa-solid fa-star"></i> Starred</div>
+        <div class="dh-tab" data-target="tab-following"><i class="fa-solid fa-users"></i> Following</div>
       </div>
 
+      <div id="tab-repos" class="tab-pane" style="display: block;">
       <div class="section-head">
         <h2>Your Repositories</h2>
         <a href="#">View all →</a>
@@ -2233,7 +2388,9 @@
         </div>
         <div class="contrib-grid" id="contrib-grid"></div>
       </div>
+      </div> <!-- End tab-repos -->
 
+      <div id="tab-feed" class="tab-pane" style="display: none;">
       <!-- Blog section -->
       <div style="margin-top:28px">
         <div class="section-head">
@@ -2417,6 +2574,23 @@
           <div class="activity-time">1w ago</div>
         </div>
       </div>
+      </div> <!-- End tab-feed -->
+
+      <div id="tab-starred" class="tab-pane" style="display: none;">
+        <div style="padding: 60px 20px; text-align: center; background: var(--bg-card); border: 1px dashed var(--border); border-radius: 12px; margin-top: 20px;">
+          <i class="fa-solid fa-star" style="font-size: 3rem; color: var(--accent3); opacity: 0.3; margin-bottom: 16px; display: block;"></i>
+          <h3 style="font-weight: 800; font-size: 1.1rem; margin-bottom: 8px;">No starred repositories</h3>
+          <p style="color: var(--text-muted); font-size: 0.85rem;">You haven't starred any repositories yet. Explore the community to find projects you like.</p>
+        </div>
+      </div>
+
+      <div id="tab-following" class="tab-pane" style="display: none;">
+        <div style="padding: 60px 20px; text-align: center; background: var(--bg-card); border: 1px dashed var(--border); border-radius: 12px; margin-top: 20px;">
+          <i class="fa-solid fa-users" style="font-size: 3rem; color: var(--accent); opacity: 0.3; margin-bottom: 16px; display: block;"></i>
+          <h3 style="font-weight: 800; font-size: 1.1rem; margin-bottom: 8px;">You aren't following anyone</h3>
+          <p style="color: var(--text-muted); font-size: 0.85rem;">Discover developers and follow them to see their activity in your feed.</p>
+        </div>
+      </div>
     </main>
 
 
@@ -2439,6 +2613,21 @@
           </div>
         </div>
         <button class="btn-new" style="width:100%;justify-content:center">Upgrade · ₹499/mo</button>
+      </div>
+
+      <!-- Interactive Terminal -->
+      <div class="widget-card">
+        <div class="widget-title"><i class="fa-solid fa-terminal" style="color:var(--accent)"></i> &nbsp;Terminal</div>
+        <div class="terminal-widget" id="term-widget" style="background: #06070a; border: 1px solid var(--border); border-radius: 6px; padding: 12px; font-family: var(--font-code); font-size: 0.75rem; height: 190px; display: flex; flex-direction: column; overflow: hidden; cursor: text; box-shadow: inset 0 4px 12px rgba(0,0,0,0.5);">
+          <div id="term-output" style="flex: 1; overflow-y: auto; color: var(--text-muted); margin-bottom: 8px; display: flex; flex-direction: column; gap: 4px; padding-right: 4px;">
+            <div><span style="color:var(--green)">devhub</span> OS v1.0.4 initialized.</div>
+            <div>Type '<span style="color:var(--accent)">help</span>' to see available commands.</div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px; margin-top: auto;">
+            <span style="color: var(--accent2); font-weight: 700;">$&gt;</span>
+            <input type="text" id="term-input" autocomplete="off" spellcheck="false" style="background: transparent; border: none; outline: none; color: var(--text-main); font-family: var(--font-code); font-size: 0.75rem; flex: 1; caret-color: var(--accent);" />
+          </div>
+        </div>
       </div>
 
       <!-- Trending -->
@@ -2621,6 +2810,42 @@
   </div>
 
 
+  <!-- ══════ COMMAND PALETTE ══════ -->
+  <div id="cmd-palette-backdrop" class="cmd-backdrop">
+    <div class="cmd-palette">
+      <div class="cmd-header">
+        <i class="fa-solid fa-magnifying-glass" style="color: var(--text-muted);"></i>
+        <input type="text" id="cmd-input" placeholder="Search commands, repos, or jump to..." autocomplete="off" spellcheck="false" />
+        <div class="cmd-esc">ESC</div>
+      </div>
+      <div class="cmd-body">
+        <div class="cmd-section">Suggestions</div>
+        <div class="cmd-item active">
+          <i class="fa-solid fa-plus"></i> Create new repository
+        </div>
+        <div class="cmd-item">
+          <i class="fa-solid fa-cloud-arrow-up"></i> Upload project
+        </div>
+        <div class="cmd-item">
+          <i class="fa-solid fa-user"></i> Go to profile
+        </div>
+        <div class="cmd-section">Repositories</div>
+        <div class="cmd-item">
+          <i class="fa-solid fa-book-bookmark"></i> sarvesh / devhub-ui
+        </div>
+        <div class="cmd-item">
+          <i class="fa-solid fa-lock"></i> sarvesh / api-gateway-rs
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ KONAMI EASTER EGG ══════ -->
+  <div id="matrix-overlay" style="position: fixed; inset: 0; z-index: 99999; background: rgba(0,0,0,0.95); display: none; opacity: 0; transition: opacity 2s; pointer-events: none; flex-direction: column; align-items: center; justify-content: center;">
+    <canvas id="matrix-canvas" style="position: absolute; inset: 0; width: 100%; height: 100%;"></canvas>
+    <div id="matrix-text" style="position: relative; color: #22c55e; font-family: 'JetBrains Mono', monospace; font-size: 2rem; font-weight: bold; text-shadow: 0 0 15px #22c55e; z-index: 2; text-align: center;"></div>
+  </div>
+
   <!-- ══════ FOOTER ══════ -->
   <footer class="dh-footer">
     <div class="footer-grid">
@@ -2662,6 +2887,10 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
   <script>
+    // Console Art Easter Egg
+    console.log("%c{DevHub}", "color: #00e5ff; font-size: 50px; font-weight: bold; text-shadow: 0 0 10px #7c3aed; font-family: monospace;");
+    console.log("%cHold up! If you're looking under the hood, you might belong with us.\nCheck out our open roles at devhub.io/careers", "color: #e8ecf0; font-size: 14px; font-family: sans-serif; padding: 10px 0;");
+
     // Contribution graph
     const grid = document.getElementById('contrib-grid');
     const levels = [0, 0, 0, 1, 1, 1, 2, 2, 3, 3, 4];
@@ -2673,8 +2902,35 @@
     // Tabs
     document.querySelectorAll('.dh-tab').forEach(tab => {
       tab.addEventListener('click', function () {
+        // Update active tab styling
         document.querySelectorAll('.dh-tab').forEach(t => t.classList.remove('active'));
         this.classList.add('active');
+        
+        // Hide all tab panes
+        document.querySelectorAll('.tab-pane').forEach(pane => {
+          pane.style.display = 'none';
+        });
+        
+        // Show target tab pane
+        const targetId = this.getAttribute('data-target');
+        if (targetId) {
+          const targetPane = document.getElementById(targetId);
+          if (targetPane) {
+            targetPane.style.display = 'block';
+            
+            // Re-trigger scroll animations so they don't pop in without animating
+            const reveals = targetPane.querySelectorAll('.reveal-on-scroll');
+            reveals.forEach(el => {
+              el.classList.remove('is-revealed');
+              setTimeout(() => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight) {
+                  el.classList.add('is-revealed');
+                }
+              }, 50);
+            });
+          }
+        }
       });
     });
     // Sidebar nav
@@ -2747,6 +3003,300 @@
           }
         }, 30);
       }, 800);
+    });
+
+    // Scroll Reveal Observer
+    document.addEventListener("DOMContentLoaded", () => {
+      const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1
+      };
+
+      const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-revealed');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, observerOptions);
+
+      const revealElements = document.querySelectorAll('.how-step, .info-block, .repo-card, .blog-card, .widget-card, .activity-item');
+      revealElements.forEach((el, index) => {
+        el.classList.add('reveal-on-scroll');
+        // Add a slight delay based on index for a staggered effect in grids
+        if (el.classList.contains('how-step') || el.classList.contains('info-block') || el.classList.contains('blog-card')) {
+          el.style.transitionDelay = `${(index % 3) * 100}ms`;
+        } else if (el.classList.contains('repo-card')) {
+          el.style.transitionDelay = `${(index % 2) * 100}ms`;
+        }
+        observer.observe(el);
+      });
+
+      // Interactive Terminal Logic
+      const termInput = document.getElementById('term-input');
+      const termOutput = document.getElementById('term-output');
+      
+      if(termInput && termOutput) {
+        termInput.addEventListener('keydown', (e) => {
+          if(e.key === 'Enter') {
+            const val = termInput.value.trim();
+            if(!val) return;
+            
+            // Add user command
+            const cmdLine = document.createElement('div');
+            cmdLine.innerHTML = `<span style="color: var(--accent2); font-weight: 700;">$&gt;</span> <span style="color: var(--text-main)">${val}</span>`;
+            termOutput.appendChild(cmdLine);
+            
+            // Generate response
+            const resLine = document.createElement('div');
+            resLine.style.color = 'var(--text-muted)';
+            const lowerCmd = val.toLowerCase();
+            
+            if(lowerCmd === 'help') {
+              resLine.innerHTML = `Available commands:<br>- <span style="color:var(--accent)">whoami</span>: display current user<br>- <span style="color:var(--accent)">clear</span>: clear terminal window<br>- <span style="color:var(--accent)">ping</span>: check connection latency<br>- <span style="color:var(--accent)">date</span>: print system date`;
+            } else if(lowerCmd === 'whoami') {
+              resLine.innerHTML = `<span style="color:var(--green)">root@devhub</span> - full access granted.`;
+            } else if(lowerCmd === 'clear') {
+              termOutput.innerHTML = '';
+              termInput.value = '';
+              return;
+            } else if(lowerCmd === 'ping') {
+              resLine.innerHTML = `pong! (${Math.floor(Math.random() * 15) + 2}ms)`;
+            } else if(lowerCmd === 'date') {
+              resLine.innerHTML = new Date().toString();
+            } else if(lowerCmd === 'do a barrel roll') {
+              resLine.innerHTML = `Barrel roll initiated!`;
+              document.body.style.transition = 'transform 2s ease-in-out';
+              document.body.style.transform = 'rotate(360deg)';
+              setTimeout(() => {
+                document.body.style.transition = '';
+                document.body.style.transform = '';
+              }, 2000);
+            } else {
+              resLine.innerHTML = `Command not found: <span style="color:var(--red)">${val}</span>`;
+            }
+            
+            termOutput.appendChild(resLine);
+            termInput.value = '';
+            termOutput.scrollTop = termOutput.scrollHeight;
+          }
+        });
+        
+        // Focus terminal when clicking inside
+        document.getElementById('term-widget').addEventListener('click', () => {
+          termInput.focus();
+        });
+      }
+
+      // Command Palette Logic
+      const cmdBackdrop = document.getElementById('cmd-palette-backdrop');
+      const cmdInput = document.getElementById('cmd-input');
+      const cmdItems = document.querySelectorAll('.cmd-item');
+      
+      function toggleCmdPalette() {
+        if (cmdBackdrop.classList.contains('show')) {
+          cmdBackdrop.classList.remove('show');
+          cmdInput.blur();
+        } else {
+          cmdBackdrop.classList.add('show');
+          cmdInput.value = '';
+          setTimeout(() => cmdInput.focus(), 50);
+          // reset active
+          cmdItems.forEach(i => i.classList.remove('active'));
+          if(cmdItems.length) cmdItems[0].classList.add('active');
+        }
+      }
+
+      document.addEventListener('keydown', (e) => {
+        // Toggle on Ctrl+K or Cmd+K
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+          e.preventDefault();
+          toggleCmdPalette();
+        }
+        
+        // Handle opened palette keydowns
+        if (cmdBackdrop.classList.contains('show')) {
+          if (e.key === 'Escape') {
+            toggleCmdPalette();
+          } else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            let idx = Array.from(cmdItems).findIndex(item => item.classList.contains('active'));
+            cmdItems[idx].classList.remove('active');
+            idx = (idx + 1) % cmdItems.length;
+            cmdItems[idx].classList.add('active');
+            cmdItems[idx].scrollIntoView({ block: 'nearest' });
+          } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            let idx = Array.from(cmdItems).findIndex(item => item.classList.contains('active'));
+            cmdItems[idx].classList.remove('active');
+            idx = (idx - 1 + cmdItems.length) % cmdItems.length;
+            cmdItems[idx].classList.add('active');
+            cmdItems[idx].scrollIntoView({ block: 'nearest' });
+          } else if (e.key === 'Enter') {
+            e.preventDefault();
+            // In a real app, this would navigate to the link
+            toggleCmdPalette(); 
+          }
+        }
+      });
+
+      // Close on clicking backdrop
+      cmdBackdrop.addEventListener('click', (e) => {
+        if (e.target === cmdBackdrop) {
+          toggleCmdPalette();
+        }
+      });
+      
+      // Bind to the fake search input in the nav
+      const navSearch = document.querySelector('.nav-search');
+      if(navSearch) {
+        navSearch.addEventListener('click', toggleCmdPalette);
+      }
+      
+      // Also bind the "Start a new repo" fake input
+      const actionSearch = document.querySelector('.fake-input');
+      if(actionSearch) {
+        actionSearch.addEventListener('click', toggleCmdPalette);
+      }
+
+      // Konami Code Logic
+      const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+      let konamiIndex = 0;
+      
+      document.addEventListener('keydown', (e) => {
+        if (e.key.toLowerCase() === konamiCode[konamiIndex].toLowerCase()) {
+          konamiIndex++;
+          if (konamiIndex === konamiCode.length) {
+            triggerMatrixEffect();
+            konamiIndex = 0;
+          }
+        } else {
+          konamiIndex = 0; // reset
+        }
+      });
+
+      function triggerMatrixEffect() {
+        const overlay = document.getElementById('matrix-overlay');
+        const canvas = document.getElementById('matrix-canvas');
+        const textObj = document.getElementById('matrix-text');
+        
+        if (overlay.style.display === 'flex') return; // prevent double trigger
+        
+        overlay.style.display = 'flex';
+        // force reflow for transition
+        void overlay.offsetWidth;
+        overlay.style.opacity = '1';
+        
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$+-*/=%""\'#&_(),.;:?!\\|{}<>[]^~'.split('');
+        const fontSize = 16;
+        const columns = canvas.width / fontSize;
+        const drops = [];
+        for (let x = 0; x < columns; x++) drops[x] = 1;
+        
+        const matrixInterval = setInterval(() => {
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = '#0F0';
+          ctx.font = fontSize + 'px monospace';
+          
+          for (let i = 0; i < drops.length; i++) {
+            const text = chars[Math.floor(Math.random() * chars.length)];
+            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+              drops[i] = 0;
+            }
+            drops[i]++;
+          }
+        }, 33);
+        
+        // Typewriter effect
+        const msg = "System Override...\nWelcome back.";
+        let i = 0;
+        textObj.innerHTML = '';
+        setTimeout(() => {
+          const typeInterval = setInterval(() => {
+            if (msg.charAt(i) === '\n') {
+              textObj.innerHTML += '<br>';
+            } else {
+              textObj.innerHTML += msg.charAt(i);
+            }
+            i++;
+            if(i >= msg.length) {
+              clearInterval(typeInterval);
+              // Fade out after a few seconds
+              setTimeout(() => {
+                overlay.style.opacity = '0';
+                setTimeout(() => {
+                  overlay.style.display = 'none';
+                  clearInterval(matrixInterval);
+                }, 2000);
+              }, 4000);
+            }
+          }, 100);
+        }, 1000);
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+          if (overlay.style.display === 'flex') {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+          }
+        });
+      }
+
+      // Overclock Easter Egg
+      let logoClicks = 0;
+      let clickTimer;
+      const navLogo = document.querySelector('.dh-nav .dh-logo');
+      if (navLogo) {
+        navLogo.addEventListener('click', (e) => {
+          e.preventDefault();
+          logoClicks++;
+          clearTimeout(clickTimer);
+          
+          if (logoClicks >= 5) {
+            document.body.classList.toggle('overclocked');
+            logoClicks = 0;
+            if (document.body.classList.contains('overclocked')) {
+               const badge = document.createElement('div');
+               badge.id = 'overclock-badge';
+               badge.className = 'overclock-badge';
+               badge.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> OVERCLOCKED';
+               document.body.appendChild(badge);
+            } else {
+               const badge = document.getElementById('overclock-badge');
+               if (badge) badge.remove();
+            }
+          } else {
+            clickTimer = setTimeout(() => { logoClicks = 0; }, 400);
+          }
+        });
+      }
+
+      // "hack" Easter Egg
+      const hackCode = ['h', 'a', 'c', 'k'];
+      let hackIndex = 0;
+      
+      document.addEventListener('keydown', (e) => {
+        if (e.target.tagName.toLowerCase() === 'input' || e.target.tagName.toLowerCase() === 'textarea') return;
+        
+        if (e.key.toLowerCase() === hackCode[hackIndex]) {
+          hackIndex++;
+          if (hackIndex === hackCode.length) {
+            document.body.classList.toggle('theme-corrupted');
+            hackIndex = 0;
+          }
+        } else {
+          hackIndex = 0;
+        }
+      });
+
     });
   </script>
 </body>
